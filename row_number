@@ -1,0 +1,37 @@
+--Get to know row number function
+
+SELECT Name,Gender,Salary,
+ROW_NUMBER() OVER (PARTITION BY Gender ORDER BY Salary)
+FROM tblEmployee
+
+-- creating a dummy employee table for row number use case demo
+
+Create table Employees
+(
+ ID int,
+ FirstName nvarchar(50),
+ LastName nvarchar(50),
+ Gender nvarchar(50),
+ Salary int
+)
+
+Insert into Employees values (1, 'Mark', 'Hastings', 'Male', 60000)
+Insert into Employees values (1, 'Mark', 'Hastings', 'Male', 60000)
+Insert into Employees values (1, 'Mark', 'Hastings', 'Male', 60000)
+Insert into Employees values (2, 'Mary', 'Lambeth', 'Female', 30000)
+Insert into Employees values (2, 'Mary', 'Lambeth', 'Female', 30000)
+Insert into Employees values (3, 'Ben', 'Hoskins', 'Male', 70000)
+Insert into Employees values (3, 'Ben', 'Hoskins', 'Male', 70000)
+Insert into Employees values (3, 'Ben', 'Hoskins', 'Male', 70000)
+
+SELECT * FROM Employees
+
+--removing duplicates expect 1 field using row function
+
+WITH EmployeeCTE AS
+(
+SELECT * ,ROW_NUMBER()OVER(PARTITION BY ID ORDER BY ID) AS Row_no
+FROM EMployees
+)
+
+DELETE FROM EmployeeCTE WHERE Row_no >1
