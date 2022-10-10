@@ -1,0 +1,26 @@
+Assume you are given the table below that shows job postings for all companies on the LinkedIn platform. 
+Write a query to get the number of companies that have posted duplicate job listings.
+
+Clarification:
+Duplicate job listings refer to two jobs at the same company with the same title and description
+
+job_listings Table:
+
+Column Name	Type
+job_id	integer
+company_id	integer
+title	string
+description	string
+
+QUERY
+
+WITH count_cte AS
+(
+SELECT * , 
+ROW_NUMBER() OVER ( PARTITION BY title,description,company_id ORDER BY company_id) AS row_num
+FROM job_listings
+)
+
+--SELECT * FROM count_cte
+SELECT  COUNT(company_id) FROM count_cte
+WHERE row_num > 1
