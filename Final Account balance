@@ -1,0 +1,35 @@
+Given a table of bank deposits and withdrawals, return the final balance for each account.
+
+Assumption:
+
+All the transactions performed for each account are present in the table; no transactions are missing.
+transactions Table:
+Column Name	Type
+transaction_id	integer
+account_id	integer
+transaction_type	varchar
+amount	decimal
+
+
+SOLUTION _____________
+
+WITH cte_deposit
+AS
+(
+SELECT account_id,SUM(amount) AS deposit
+FROM transactions
+WHERE transaction_type = 'Deposit'
+GROUP BY account_id
+),
+cte_withdrawal
+AS
+(
+SELECT account_id,SUM(amount) AS withdrawn
+FROM transactions
+WHERE transaction_type = 'Withdrawal'
+GROUP BY account_id
+)
+
+SELECT cte_deposit.account_id , (deposit - withdrawn) AS final_balance
+FROM cte_deposit JOIN cte_withdrawal
+ON cte_deposit.account_id = cte_withdrawal.account_id
